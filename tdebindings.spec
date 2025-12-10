@@ -1,11 +1,7 @@
-#
-# Please submit bugfixes or comments via http://www.trinitydesktop.org/
-#
-
-# Required for PCLinuxOS: removes the ldflag '--no-undefined'
-%if 0%{?pclinuxos}
-%define _disable_ld_no_undefined 1
-%endif
+%bcond clang 1
+%bcond python 1
+%bcond tqscintilla 1
+%bcond java 1
 
 # BUILD WARNING:
 #  Remove qt-devel and qt3-devel and any kde*-devel on your system !
@@ -16,6 +12,8 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
+%define pkg_rel 2
+
 %define tde_pkg tdebindings
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -29,34 +27,21 @@
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%if 0%{?mdkversion}
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
 %define _disable_rebuild_configure 1
-%endif
 
 %define tarball_name %{tde_pkg}-trinity
-%global toolchain %(readlink /usr/bin/cc)
 
-# Special note for RHEL4:
-#  You must create symlink 'libgcj.so' manually because it does not exist by default.
-# E.g:
-#  ln -s /usr/lib/libgcj.so.5.0.0 /usr/lib/jvm/java/lib/libgcj.so
-# or 64 bits:
-#  ln -s /usr/lib64/libgcj.so.5.0.0 /usr/lib/jvm/java/lib/libgcj.so
 
 Name:			trinity-%{tde_pkg}
 Summary:		TDE bindings to non-C++ languages
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:		%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -66,26 +51,15 @@ Prefix:			%{tde_prefix}
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
 Source1:		%{name}-rpmlintrc
 
-BuildRequires:  cmake make autoconf automake libtool 
+BuildRequires:  autoconf automake libtool m4
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
-%if "%{?toolchain}" != "clang"
-BuildRequires:	gcc-c++
-%endif
+%{!?with_clang:BuildRequires:	gcc-c++}
+
 BuildRequires:	desktop-file-utils
 BuildRequires:       pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # ZLIB support
 BuildRequires: pkgconfig(zlib)
@@ -97,12 +71,7 @@ BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires:  pkgconfig(gtk+-2.0)
 
 # XULRUNNER support
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1220
-#BuildRequires: xulrunner-devel
-%endif
-%if 0%{?suse_version} == 1140
-BuildRequires: mozilla-xulrunner20-devel
-%endif
+# come back to this later, maybe Pale Moon's...
 
 # OPENSSL support
 BuildRequires:  pkgconfig(openssl)
@@ -118,8 +87,7 @@ BuildRequires:  pkgconfig(xcursor)
 BuildRequires:  pkgconfig(xinerama)
 
 # PYTHON support
-%define with_python 1
-BuildRequires:  pkgconfig(python)
+%{?with_python:BuildRequires:  pkgconfig(python)}
 
 ## ruby
 BuildRequires:  pkgconfig(ruby)
@@ -138,12 +106,6 @@ BuildRequires:  pkgconfig(ruby)
 %endif
 %endif
 %endif
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
-%define ruby_arch %(ruby -rrbconfig -e 'puts Config::CONFIG["archdir"]')
-%endif
-%if 0%{?pclinuxos}
-%define ruby_arch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["archdir"]')
-%endif
 
 %if "%{?ruby_libdir}" != ""
 %define ruby_rubylibdir %{?ruby_libdir}
@@ -159,77 +121,32 @@ BuildRequires:  pkgconfig(ruby)
 %global	_normalized_cpu	%(echo %{_target_cpu} | sed 's/^ppc/powerpc/;s/i.86/i386/;s/sparcv./sparc/;s/armv.*/arm/')
 
 ## java
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-BuildRequires:	java-1.4.2-gcj-compat-devel
-BuildRequires:	libgcj-devel
-BuildRequires:	gcc-java
-%endif
-
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
-
-# PCLinuxOS use SUN's Java
-%if 0%{?pclinuxos}
-BuildRequires:	java-devel
-%else
-
-# Others use OpenJDK
+%if %{with java}
 BuildRequires: java-openjdk
 BuildRequires: java-devel >= 1.4.2
-%if 0%{?suse_version} >= 1320
-BuildRequires:	java-1_8_0-openjdk-devel
-%endif
-%if 0%{?fedora} >= 42
-BuildRequires:	java-21-openjdk-devel
-%endif
-%if ( 0%{?fedora} >= 21 && 0%{?fedora} <= 41 ) || 0%{?mgaversion} >= 5 || 0%{?rhel} >= 8
-BuildRequires: java-1.8.0-openjdk-devel
-%endif
-%if 0%{?fedora} == 17 || 0%{?fedora} == 18 || 0%{?fedora} == 19 || 0%{?fedora} == 20 || 0%{?suse_version} == 1230 || 0%{?suse_version} == 1310 || 0%{?mgaversion} == 3 || 0%{?mgaversion} == 4 || 0%{?rhel} == 7
-BuildRequires: java-1.7.0-openjdk-devel
-%endif
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
-BuildRequires: java-1.6.0-openjdk-devel
-%endif
-
-%endif
-%endif
-
-%if 0%{?suse_version}
-%define java_home %{_usr}/%{_lib}/jvm/java
-%else
-%if 0%{?rhel} == 4
-%define java_home %{_usr}/lib/jvm/java-1.4.2-gcj-1.4.2.0
-%else
 %define java_home %{_usr}/lib/jvm/java
-%endif
-%endif
-%if 0%{?pclinuxos} == 0
-%define with_java 1
 %endif
 
 ## Perl
 # There is no 'perl-devel' package on RHEL5
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion}
 BuildRequires:	perl-devel
-%endif
 %define perl_vendorarch %{expand:%%(eval `perl -V:installvendorarch`; echo $installvendorarch)}
 
 ## QScintilla
-BuildRequires:	libtqscintilla-devel >= %{?tde_epoch:%{tde_epoch}:}1.7.1
-%define with_qscintilla 1
+%{?with_tqscintilla:BuildRequires:	libtqscintilla-devel >= %{?tde_epoch:%{tde_epoch}:}1.7.1}
 
 Obsoletes:	trinity-kdebindings < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-kdebindings = %{?epoch:%{epoch}:}%{version}-%{release}
 
 # Metapackage requires
-%if 0%{?with_java}
+%if %{with java}
 Requires: trinity-tdebindings-java = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: trinity-juic = %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 Requires: trinity-libsmoketqt = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: trinity-libsmoketde = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: perl-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{with_python}
+%if %{with python}
 Requires: python-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 Requires: trinity-libkjsembed1 = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -267,7 +184,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libdcop3-java
 Summary:	DCOP bindings for Java [Trinity]
@@ -290,7 +207,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libdcop3-java-devel
 Summary:	DCOP bindings for Java (dcopidl2java program) [Trinity]
@@ -314,7 +231,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libdcop3-jni
 Summary:	DCOP bindings for Java ( Native libraries ) [Trinity]
@@ -337,7 +254,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libqt3-java
 Summary:	Java bindings for Qt [Trinity]
@@ -365,7 +282,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libtqt3-jni
 Summary:	Java bindings for TQt ( Native libraries ) [Trinity]
@@ -393,7 +310,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libtqt3-jni-devel
 Summary:	Development files fo Java bindings for TQt ( Native libraries ) [Trinity]
@@ -417,7 +334,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libtrinity-java
 Summary:	Tdelibs bindings for Java [Trinity]
@@ -443,7 +360,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libtrinity-jni
 Summary:	Tdelibs bindings for java ( Native libraries ) [Trinity]
@@ -466,7 +383,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 
 %package -n trinity-libtrinity-jni-devel
 Summary:	Development files for tdelibs bindings for java ( Native libraries ) [Trinity]
@@ -582,11 +499,7 @@ This package is part of the official TDE bindings module.
 %package -n perl-dcop
 Summary:	DCOP Bindings for Perl 
 Group:		System/Libraries
-%if 0%{?suse_version}
-Requires:	perl-base
-%else
 Requires:	perl
-%endif
 
 Obsoletes:	trinity-kdebindings-dcopperl < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-kdebindings-dcopperl = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -607,7 +520,7 @@ Perl bindings to the DCOP interprocess communication protocol used by TDE
 
 ##########
 
-%if 0%{with_python}
+%if %{with python}
 
 %package -n python-dcop
 Summary:	DCOP bindings for Python
@@ -730,7 +643,7 @@ This package is part of the official TDE bindings module.
 
 ##########
 
-%if 0%{?with_java}
+%if %{with java}
 %package -n trinity-juic
 Summary:	The Qt Java UI Compiler
 Group:		Development/Languages/Java
@@ -827,7 +740,7 @@ Summary:	Kmozilla for TDE
 Group:		System/Libraries
 
 %description -n trinity-kmozilla
-This package contains the kmozilla library fro TDE.
+This package contains the kmozilla library for TDE.
 
 %files -n trinity-kmozilla
 %defattr(-,root,root,-)
@@ -859,20 +772,22 @@ xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
 
 ##########
 
-%if 0%{?with_gtk1}
-%package -n trinity-libgtkxparts1
-Summary:	Xparts library for GTK
-Group:		Development/Languages/Other
+# uhh, no
 
-%description -n trinity-libgtkxparts1
-This package contains the xparts library for GTK.
+# %if 0%{?with_gtk1}
+# %package -n trinity-libgtkxparts1
+# Summary:	Xparts library for GTK
+# Group:		Development/Languages/Other
 
-%files -n trinity-libgtkxparts1
-%defattr(-,root,root,-)
-%{tde_libdir}/libgtkxparts.so.*
-%{tde_libdir}/libgtkxparts.la
+# %description -n trinity-libgtkxparts1
+# This package contains the xparts library for GTK.
 
-%endif
+# %files -n trinity-libgtkxparts1
+# %defattr(-,root,root,-)
+# %{tde_libdir}/libgtkxparts.so.*
+# %{tde_libdir}/libgtkxparts.la
+
+# %endif
 
 ##########
 
@@ -896,9 +811,12 @@ This package contains the xparts library for TDE.
 %package -n trinity-libxparts-devel
 Summary:	Xparts development files
 Group:		Development/Languages/Other
-%if 0%{?with_gtk1}
-Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
-%endif
+
+# still no...
+# %if 0%{?with_gtk1}
+# Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
+# %endif
+
 Requires:	trinity-libtdexparts = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n trinity-libxparts-devel
@@ -920,9 +838,12 @@ Group:		Development/Languages/Other
 
 # Metapckage requires
 Requires:	trinity-xpart-notepad = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{?with_gtk1}
-Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
-%endif
+
+# ... and no...
+# %if 0%{?with_gtk1}
+# Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
+# %endif
+
 Requires:	trinity-libtdexparts = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	trinity-libdcop-c = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -978,14 +899,14 @@ Provides:	trinity-kdebindings-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
 # Metapackage
 Requires:	trinity-libsmoketqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{?with_java}
+%if %{with java}
 Requires:	trinity-libdcop3-java-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 Requires:	trinity-libsmoketde-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	trinity-libkjsembed-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	trinity-libxparts-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	trinity-libdcop-c-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{?with_java}
+%if %{with java}
 Requires:	trinity-libtqt3-jni-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	trinity-libtrinity-jni-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
@@ -995,14 +916,6 @@ This package contains the development files for the TDE bindings.
 
 %files devel
 %defattr(-,root,root,-)
-
-##########
-
-%if 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
 
 %prep
 %autosetup -p1 -n %{tarball_name}-%{version}%{?preversion:~%{preversion}}
@@ -1019,34 +932,11 @@ exit 2
 exit 3
 %endif
 
-%if 0%{?mdkver} >= 5000000
 touch config.h.in
-%endif
-
-# [tdebindings] Function 'rb_frame_this_func' does not exist in RHEL4/5
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-%__sed -i "qtruby/rubylib/qtruby/Qt.cpp" \
-       -i "korundum/rubylib/korundum/Korundum.cpp" \
-       -e "s|rb_frame_this_func|rb_frame_last_func|g"
-%endif
-
-# Another strange FTBFS in RHEL 5
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-%__sed -i "xparts/xpart_notepad/shell_xparthost.cpp" \
-       -i "xparts/xpart_notepad/xp_notepad.cpp" \
-       -e "/TDEApplication/ s| );|, true, true, true);|"
-%endif
 
 # Disable kmozilla, it does not build with recent xulrunner (missing 'libmozjs.so')
 %__sed -i "xparts/Makefile.am" \
        -e "s|SUBDIRS = .*|SUBDIRS = src xpart_notepad|"
-
-# Fix Fedora >= 28 automatic invalid dependency to '/usr/bin/kjscmd'
-%if 0%{?fedora} >= 28 || 0%{?mgaversion} >= 7 || 0%{?rhel} >= 8
-%__sed -i "kjsembed/tdescript/swaptabs.js" \
-       -i "kjsembed/stdlib/cmdline.js" \
-       -e "s|/usr/bin/env kjscmd|%{tde_bindir}/kjscmd|"
-%endif
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/"*"/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -1069,22 +959,10 @@ if [ -d "/usr/include/%{_normalized_cpu}-linux" ]; then
   export EXTRA_INCLUDES="/usr/include/%{_normalized_cpu}-linux"
 fi
 
-# Specific path for RHEL4
-if [ -d "/usr/X11R6" ]; then
-  export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
-fi
 if [ -d "/usr/evolution28" ]; then
   export PATH="/usr/evolution28/bin:${PATH}"
   export PKG_CONFIG_PATH="/usr/evolution28/%{_lib}/pkgconfig:${PKG_CONFIG_PATH}"
 fi
-
-# Warning: openSUSE 13.1: /usr/include/ruby-2.0.0/ruby.h
-%if 0%{?suse_version} == 1310 || 0%{?suse_version} == 1320
-EXTRA_INCLUDES="/usr/include/ruby-%{rb20_ver}:/usr/include/ruby-%{rb20_ver}/%{_target}"
-%endif
-%if 0%{?suse_version} >= 1330
-EXTRA_INCLUDES="/usr/include/ruby-%{rb_ver}:/usr/include/ruby-%{rb_ver}/%{_target}-gnu"
-%endif
 
 # Force python version
 export PYTHON=%{__python}
@@ -1110,23 +988,21 @@ export PYTHON=%{__python}
   \
   --with-extra-includes=%{_includedir}/tqt:${EXTRA_INCLUDES} \
   --with-extra-libs=%{tde_libdir} \
-%if 0%{with_python}
+%if %{with python}
   --with-pythondir=%{_usr} \
 %endif
   \
   %{?with_java:--with-java=%{java_home}} %{!?with_java:--without-java} \
-  %{?with_qscintilla:--enable-qscintilla} %{!?with_qscintilla:--disable-qscintilla}
+  %{?with_tqscintilla:--enable-qscintilla} %{!?with_tqscintilla:--disable-qscintilla}
 
 # Ensure python was detected properly
 if grep "LIBPYTHON=''" "config.log"; then
   exit 1
 fi
 
-%if 0%{?mdkver}
 # Something weird in openmandriva autotools:
 # we need to update generated files timestamps to avoid autotools infinite loop
 touch subdirs acinclude.m4 aclocal.m4 Makefile.am Makefile.in Makefile configure config.status
-%endif
 
 # Build dcopperl with specific options
 pushd dcopperl
@@ -1151,7 +1027,7 @@ export PATH="%{tde_bindir}:${PATH}"
 find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
 
-%if 0%{?with_java}
+%if %{with java}
 # Installs juic
 %__install -D -m 755 qtjava/designer/juic/bin/juic	%{?buildroot}%{tde_bindir}/juic
 %__install -d -m 755 %{?buildroot}%{tde_datadir}/juic/common
@@ -1182,10 +1058,4 @@ if [ ! -d "%{?buildroot}%{python_sitearch}" ] && [ -d "%{?buildroot}%{python_sit
   %__mv -f "%{?buildroot}%{python_sitelib}/"{pcop.la,pcop.so,pydcop.py} "%{?buildroot}%{python_sitearch}"
   rmdir "%{?buildroot}%{python_sitelib}"
 fi
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -u kjscmd  Development 
-%suse_update_desktop_file -u embedjs Development 
-%endif
 
