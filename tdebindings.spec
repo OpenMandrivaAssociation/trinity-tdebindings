@@ -1,5 +1,5 @@
 %bcond clang 1
-%bcond python 1
+%bcond python 0
 %bcond tqscintilla 1
 %bcond java 1
 
@@ -12,7 +12,7 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 2
+%define pkg_rel 3
 
 %define tde_pkg tdebindings
 %define tde_prefix /opt/trinity
@@ -966,6 +966,8 @@ fi
 
 # Force python version
 export PYTHON=%{__python}
+export LIBPYTHON=%{py_libdir}
+export PYTHONINC=%{py_incdir}
 
 # Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
@@ -995,10 +997,10 @@ export PYTHON=%{__python}
   %{?with_java:--with-java=%{java_home}} %{!?with_java:--without-java} \
   %{?with_tqscintilla:--enable-qscintilla} %{!?with_tqscintilla:--disable-qscintilla}
 
-# Ensure python was detected properly
-if grep "LIBPYTHON=''" "config.log"; then
-  exit 1
-fi
+# # Ensure python was detected properly
+# if grep "LIBPYTHON=''" "config.log"; then
+#   exit 1
+# fi
 
 # Something weird in openmandriva autotools:
 # we need to update generated files timestamps to avoid autotools infinite loop
