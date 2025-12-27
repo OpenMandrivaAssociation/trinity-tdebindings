@@ -48,7 +48,7 @@
 Name:			trinity-%{tde_pkg}
 Summary:		TDE bindings to non-C++ languages
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}2
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
