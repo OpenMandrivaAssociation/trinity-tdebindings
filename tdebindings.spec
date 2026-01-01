@@ -81,6 +81,8 @@ BuildRequires:  pkgconfig(xinerama)
 ## ruby
 BuildRequires:  pkgconfig(ruby)
 
+BuildRequires:  nas-devel
+
 # Check for Ruby library directory
 %if "%{?ruby_libarchdir}" != "" && "%{?ruby_libarchdir}" != "%{_libdir}/%{name}"
 %define ruby_arch %{?ruby_libarchdir}
