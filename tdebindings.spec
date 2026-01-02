@@ -12,9 +12,11 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 3
+%define pkg_rel 4
 
 %define tde_pkg tdebindings
+
+%define tde_prefix /opt/trinity
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -32,10 +34,6 @@ URL:			http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
-#Vendor:		Trinity Desktop
-#Packager:	Francois Andriot <francois.andriot@free.fr>
-
-Prefix:			/opt/trinity
 
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
 Source1:		%{name}-rpmlintrc
@@ -192,7 +190,7 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libdcop3-java
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/java/org/
+%{tde_prefix}/%{_lib}/java/org/
 
 %endif
 
@@ -215,8 +213,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libdcop3-java-devel
 %defattr(-,root,root,-)
-%{prefix}/bin/dcopidl2java
-%{prefix}/share/man/man1/dcopidl2java.1*
+%{tde_prefix}/bin/dcopidl2java
+%{tde_prefix}/share/man/man1/dcopidl2java.1*
 
 %endif
 
@@ -238,8 +236,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libdcop3-jni
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libjavadcop.la
-%{prefix}/%{_lib}/libjavadcop.so
+%{tde_prefix}/%{_lib}/libjavadcop.la
+%{tde_prefix}/%{_lib}/libjavadcop.so
 
 %endif
 
@@ -266,8 +264,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libqt3-java
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/java/qtjava*.jar
-%{prefix}/share/doc/tde/HTML/en/javalib/
+%{tde_prefix}/%{_lib}/java/qtjava*.jar
+%{tde_prefix}/share/doc/tde/HTML/en/javalib/
 
 %endif
 
@@ -291,10 +289,10 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtqt3-jni
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/lib*qtjavasupport.la
-%{prefix}/%{_lib}/lib*qtjavasupport.so.*
-%{prefix}/%{_lib}/jni/lib*qtjava.la
-%{prefix}/%{_lib}/jni/lib*qtjava.so.*
+%{tde_prefix}/%{_lib}/lib*qtjavasupport.la
+%{tde_prefix}/%{_lib}/lib*qtjavasupport.so.*
+%{tde_prefix}/%{_lib}/jni/lib*qtjava.la
+%{tde_prefix}/%{_lib}/jni/lib*qtjava.so.*
 %doc qtjava/ChangeLog
 
 %endif
@@ -318,8 +316,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtqt3-jni-devel
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/lib*qtjavasupport.so
-%{prefix}/%{_lib}/jni/lib*qtjava.so
+%{tde_prefix}/%{_lib}/lib*qtjavasupport.so
+%{tde_prefix}/%{_lib}/jni/lib*qtjava.so
 
 %endif
 
@@ -345,7 +343,7 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtrinity-java
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/java/koala*.jar
+%{tde_prefix}/%{_lib}/java/koala*.jar
 
 %endif
 
@@ -366,8 +364,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtrinity-jni
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/jni/libtdejava.la
-%{prefix}/%{_lib}/jni/libtdejava.so.*
+%{tde_prefix}/%{_lib}/jni/libtdejava.la
+%{tde_prefix}/%{_lib}/jni/libtdejava.so.*
 %doc tdejava/ChangeLog
 
 %endif
@@ -388,7 +386,7 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtrinity-jni-devel
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/jni/libtdejava.so
+%{tde_prefix}/%{_lib}/jni/libtdejava.so
 
 %endif
 
@@ -410,7 +408,7 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libsmoketqt
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libsmoketqt.so.*
+%{tde_prefix}/%{_lib}/libsmoketqt.so.*
 
 ##########
 
@@ -435,9 +433,9 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libsmoketqt-devel
 %defattr(-,root,root,-)
-%{prefix}/include/tde/smoke.h
-%{prefix}/%{_lib}/libsmoketqt.so
-%{prefix}/%{_lib}/libsmoketqt.la
+%{tde_prefix}/include/tde/smoke.h
+%{tde_prefix}/%{_lib}/libsmoketqt.so
+%{tde_prefix}/%{_lib}/libsmoketqt.la
 
 ##########
 
@@ -457,7 +455,7 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libsmoketde
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libsmoketde.so.*
+%{tde_prefix}/%{_lib}/libsmoketde.so.*
 
 ##########
 
@@ -482,8 +480,8 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libsmoketde-devel
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libsmoketde.so
-%{prefix}/%{_lib}/libsmoketde.la
+%{tde_prefix}/%{_lib}/libsmoketde.so
+%{tde_prefix}/%{_lib}/libsmoketde.la
 
 ##########
 
@@ -507,7 +505,7 @@ Perl bindings to the DCOP interprocess communication protocol used by TDE
 %{perl_vendorarch}/DCOP.pm
 %{perl_vendorarch}/DCOP/
 %doc dcopperl/AUTHORS dcopperl/Changes dcopperl/README dcopperl/TODO
-%{prefix}/share/man/man3/DCOP.3pm*
+%{tde_prefix}/share/man/man3/DCOP.3pm*
 
 ##########
 
@@ -559,31 +557,31 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libkjsembed1
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libkjsembed.so.*
-%{prefix}/%{_lib}/trinity/libimagefxplugin.la
-%{prefix}/%{_lib}/trinity/libimagefxplugin.so
-%{prefix}/share/services/imagefx_plugin.desktop
-%{prefix}/%{_lib}/trinity/libqprocessplugin.so
-%{prefix}/%{_lib}/trinity/libqprocessplugin.la
-%{prefix}/share/services/qprocess_plugin.desktop
-%{prefix}/%{_lib}/trinity/libfileitemplugin.la
-%{prefix}/%{_lib}/trinity/libfileitemplugin.so
-%{prefix}/share/services/tdefileitem_plugin.desktop
-%{prefix}/share/apps/kjsembed/
-%{prefix}/share/servicetypes/binding_type.desktop
-%{prefix}/bin/embedjs
-%{prefix}/share/apps/embedjs/
-%{prefix}/share/applications/tde/embedjs.desktop
-%{prefix}/share/icons/hicolor/16x16/apps/embedjs.png
-%{prefix}/share/icons/hicolor/32x32/apps/embedjs.png
-%{prefix}/%{_lib}/trinity/libjavascript.la
-%{prefix}/%{_lib}/trinity/libjavascript.so
-%dir %{prefix}/share/apps/kate
-%dir %{prefix}/share/apps/kate/scripts
-%{prefix}/share/apps/kate/scripts/swaptabs.js
-%{prefix}/share/apps/kate/scripts/swaptabs.ui
-%{prefix}/share/apps/kate/scripts/swaptabs.desktop
-%{prefix}/share/services/javascript.desktop
+%{tde_prefix}/%{_lib}/libkjsembed.so.*
+%{tde_prefix}/%{_lib}/trinity/libimagefxplugin.la
+%{tde_prefix}/%{_lib}/trinity/libimagefxplugin.so
+%{tde_prefix}/share/services/imagefx_plugin.desktop
+%{tde_prefix}/%{_lib}/trinity/libqprocessplugin.so
+%{tde_prefix}/%{_lib}/trinity/libqprocessplugin.la
+%{tde_prefix}/share/services/qprocess_plugin.desktop
+%{tde_prefix}/%{_lib}/trinity/libfileitemplugin.la
+%{tde_prefix}/%{_lib}/trinity/libfileitemplugin.so
+%{tde_prefix}/share/services/tdefileitem_plugin.desktop
+%{tde_prefix}/share/apps/kjsembed/
+%{tde_prefix}/share/servicetypes/binding_type.desktop
+%{tde_prefix}/bin/embedjs
+%{tde_prefix}/share/apps/embedjs/
+%{tde_prefix}/share/applications/tde/embedjs.desktop
+%{tde_prefix}/share/icons/hicolor/16x16/apps/embedjs.png
+%{tde_prefix}/share/icons/hicolor/32x32/apps/embedjs.png
+%{tde_prefix}/%{_lib}/trinity/libjavascript.la
+%{tde_prefix}/%{_lib}/trinity/libjavascript.so
+%dir %{tde_prefix}/share/apps/kate
+%dir %{tde_prefix}/share/apps/kate/scripts
+%{tde_prefix}/share/apps/kate/scripts/swaptabs.js
+%{tde_prefix}/share/apps/kate/scripts/swaptabs.ui
+%{tde_prefix}/share/apps/kate/scripts/swaptabs.desktop
+%{tde_prefix}/share/services/javascript.desktop
 %doc kjsembed/docs/ChangeLog
 
 ##########
@@ -606,17 +604,17 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libkjsembed-devel
 %defattr(-,root,root,-)
-%{prefix}/include/tde/kjsembed/
-%{prefix}/%{_lib}/libkjsembed.so
-%{prefix}/%{_lib}/libkjsembed.la
-%{prefix}/share/doc/trinity-libkjsembed-devel/
+%{tde_prefix}/include/tde/kjsembed/
+%{tde_prefix}/%{_lib}/libkjsembed.so
+%{tde_prefix}/%{_lib}/libkjsembed.la
+%{tde_prefix}/share/doc/trinity-libkjsembed-devel/
 
 ##########
 
 %package -n trinity-kjscmd
 Summary:	A script interpreter using the TDE JavaScript library
 Group:		System/Libraries
-Provides:	%{prefix}/bin/kjscmd
+Provides:	%{tde_prefix}/bin/kjscmd
 
 %description -n trinity-kjscmd
 This package contains the kjscmd program, which is a standalone
@@ -626,11 +624,11 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-kjscmd
 %defattr(-,root,root,-)
-%{prefix}/bin/kjscmd
-%{prefix}/share/applications/tde/kjscmd.desktop
-%{prefix}/share/man/man1/kjscmd.*
-%{prefix}/%{_lib}/trinity/libjsconsoleplugin.la
-%{prefix}/%{_lib}/trinity/libjsconsoleplugin.so
+%{tde_prefix}/bin/kjscmd
+%{tde_prefix}/share/applications/tde/kjscmd.desktop
+%{tde_prefix}/share/man/man1/kjscmd.*
+%{tde_prefix}/%{_lib}/trinity/libjsconsoleplugin.la
+%{tde_prefix}/%{_lib}/trinity/libjsconsoleplugin.so
 
 ##########
 
@@ -651,9 +649,9 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-juic
 %defattr(-,root,root,-)
-%{prefix}/bin/juic
-%{prefix}/share/juic/
-%{prefix}/share/man/man1/juic.1*
+%{tde_prefix}/bin/juic
+%{tde_prefix}/share/juic/
+%{tde_prefix}/share/man/man1/juic.1*
 %endif
 
 ##########
@@ -674,19 +672,19 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libkorundum0-ruby
 %defattr(-,root,root,-)
-%{prefix}/bin/rbtdesh
-%{prefix}/bin/rbtdeapi
-%{prefix}/bin/krubyinit
-%{prefix}/bin/rbtdeconfig_compiler
+%{tde_prefix}/bin/rbtdesh
+%{tde_prefix}/bin/rbtdeapi
+%{tde_prefix}/bin/krubyinit
+%{tde_prefix}/bin/rbtdeconfig_compiler
 %{ruby_rubylibdir}/Korundum.rb
 %dir %{ruby_rubylibdir}/TDE
 %{ruby_rubylibdir}/TDE/korundum.rb
 %{ruby_arch}/korundum.la
 %{ruby_arch}/korundum.so*
 %doc korundum/ChangeLog
-%{prefix}/share/man/man1/krubyinit.1*
-%{prefix}/share/man/man1/rbtdeapi.1*
-%{prefix}/share/man/man1/rbtdesh.1*
+%{tde_prefix}/share/man/man1/krubyinit.1*
+%{tde_prefix}/share/man/man1/rbtdeapi.1*
+%{tde_prefix}/share/man/man1/rbtdesh.1*
 
 ##########
 
@@ -706,10 +704,10 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libqt0-ruby
 %defattr(-,root,root,-)
-%{prefix}/bin/rbqtsh
-%{prefix}/bin/rbqtapi
-%{prefix}/bin/rbuic
-%{prefix}/bin/qtrubyinit
+%{tde_prefix}/bin/rbqtsh
+%{tde_prefix}/bin/rbqtapi
+%{tde_prefix}/bin/rbuic
+%{tde_prefix}/bin/qtrubyinit
 %dir %{ruby_rubylibdir}/Qt
 %{ruby_rubylibdir}/Qt/qtruby.rb
 %{ruby_rubylibdir}/Qt.rb
@@ -718,10 +716,10 @@ This package is part of the official TDE bindings module.
 %{ruby_arch}/tqui.so*
 %{ruby_arch}/tqui.la
 %doc qtruby/ChangeLog
-%{prefix}/share/man/man1/qtrubyinit.1*
-%{prefix}/share/man/man1/rbqtapi.1*
-%{prefix}/share/man/man1/rbqtsh.1*
-%{prefix}/share/man/man1/rbuic.1*
+%{tde_prefix}/share/man/man1/qtrubyinit.1*
+%{tde_prefix}/share/man/man1/rbqtapi.1*
+%{tde_prefix}/share/man/man1/rbqtsh.1*
+%{tde_prefix}/share/man/man1/rbuic.1*
 
 ##########
 
@@ -735,11 +733,11 @@ This package contains the kmozilla library for TDE.
 
 %files -n trinity-kmozilla
 %defattr(-,root,root,-)
-%{prefix}/bin/kmozilla
-%{prefix}/%{_lib}/libkmozillapart.so.*
-%{prefix}/%{_lib}/libkmozillapart.so
-%{prefix}/%{_lib}/libkmozillapart.la
-%{prefix}/share/services/kmozilla.desktop
+%{tde_prefix}/bin/kmozilla
+%{tde_prefix}/%{_lib}/libkmozillapart.so.*
+%{tde_prefix}/%{_lib}/libkmozillapart.so
+%{tde_prefix}/%{_lib}/libkmozillapart.la
+%{tde_prefix}/share/services/kmozilla.desktop
 %endif
 
 ##########
@@ -753,12 +751,12 @@ xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
 
 %files -n trinity-xpart-notepad
 %defattr(-,root,root,-)
-%{prefix}/bin/shell_xparthost
-%{prefix}/bin/xp_notepad
-%{prefix}/%{_lib}/libxp_notepadpart.la
-%{prefix}/%{_lib}/libxp_notepadpart.so
-%{prefix}/%{_lib}/libxp_notepadpart.so.*
-%{prefix}/share/services/xp_notepad.desktop
+%{tde_prefix}/bin/shell_xparthost
+%{tde_prefix}/bin/xp_notepad
+%{tde_prefix}/%{_lib}/libxp_notepadpart.la
+%{tde_prefix}/%{_lib}/libxp_notepadpart.so
+%{tde_prefix}/%{_lib}/libxp_notepadpart.so.*
+%{tde_prefix}/share/services/xp_notepad.desktop
 %doc xparts/xpart_notepad/README
 
 ##########
@@ -775,8 +773,8 @@ xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
 
 # %files -n trinity-libgtkxparts1
 # %defattr(-,root,root,-)
-# %{prefix}/%{_lib}/libgtkxparts.so.*
-# %{prefix}/%{_lib}/libgtkxparts.la
+# %{tde_prefix}/%{_lib}/libgtkxparts.so.*
+# %{tde_prefix}/%{_lib}/libgtkxparts.la
 
 # %endif
 
@@ -794,8 +792,8 @@ This package contains the xparts library for TDE.
 
 %files -n trinity-libtdexparts
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libtdexparts.so.*
-%{prefix}/%{_lib}/libtdexparts.la
+%{tde_prefix}/%{_lib}/libtdexparts.so.*
+%{tde_prefix}/%{_lib}/libtdexparts.la
 
 ##########
 
@@ -815,11 +813,11 @@ This package contains the development files for Xparts library.
 
 %files -n trinity-libxparts-devel
 %defattr(-,root,root,-)
-%{prefix}/include/tde/xtdeparts/
+%{tde_prefix}/include/tde/xtdeparts/
 %if 0%{?with_gtk1}
-%{prefix}/%{_lib}/libgtkxparts.so
+%{tde_prefix}/%{_lib}/libgtkxparts.so
 %endif
-%{prefix}/%{_lib}/libtdexparts.so
+%{tde_prefix}/%{_lib}/libtdexparts.so
 
 ##########
 
@@ -858,7 +856,7 @@ This package contains the DCOP bindings for C.
 
 %files -n trinity-libdcop-c
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libdcopc.so.*
+%{tde_prefix}/%{_lib}/libdcopc.so.*
 
 ###########
 
@@ -872,9 +870,9 @@ This package contains the development files for DCOP bindings for C.
 
 %files -n trinity-libdcop-c-devel
 %defattr(-,root,root,-)
-%{prefix}/%{_lib}/libdcopc.so
-%{prefix}/%{_lib}/libdcopc.la
-%{prefix}/include/tde/dcopc/
+%{tde_prefix}/%{_lib}/libdcopc.so
+%{tde_prefix}/%{_lib}/libdcopc.la
+%{tde_prefix}/include/tde/dcopc/
 
 ##########
 
@@ -936,8 +934,8 @@ touch config.h.in
 
 %build
 unset QTDIR QTINC QTLIB
-export PATH="%{prefix}/bin:${PATH}"
-export TDEDIR=%{prefix}
+export PATH="%{tde_prefix}/bin:${PATH}"
+export TDEDIR=%{tde_prefix}
 
 unset JAVA_HOME ||:
 %{?java_home:JAVA_HOME=%{java_home}; export JAVA_HOME}
@@ -962,14 +960,14 @@ export PYTHONINC=%{py_incdir}
 
 # Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
-  --prefix=%{prefix} \
-  --exec-prefix=%{prefix} \
-  --bindir=%{prefix}/bin \
-  --datadir=%{prefix}/share \
-  --docdir=%{prefix}/share/doc \
-  --includedir=%{prefix}/include/tde \
-  --libdir=%{prefix}/%{_lib} \
-  --mandir=%{prefix}/share/man \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_prefix}/bin \
+  --datadir=%{tde_prefix}/share \
+  --docdir=%{tde_prefix}/share/doc \
+  --includedir=%{tde_prefix}/include/tde \
+  --libdir=%{tde_prefix}/%{_lib} \
+  --mandir=%{tde_prefix}/share/man \
   \
   --disable-dependency-tracking \
   --disable-debug \
@@ -980,7 +978,7 @@ export PYTHONINC=%{py_incdir}
   --disable-gcc-hidden-visibility \
   \
   --with-extra-includes=%{_includedir}/tqt:${EXTRA_INCLUDES} \
-  --with-extra-libs=%{prefix}/%{_lib} \
+  --with-extra-libs=%{tde_prefix}/%{_lib} \
 %if %{with python}
   --with-pythondir=%{_usr} \
 %endif
@@ -999,7 +997,7 @@ touch subdirs acinclude.m4 aclocal.m4 Makefile.am Makefile.in Makefile configure
 
 # Build dcopperl with specific options
 pushd dcopperl
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL INSTALLDIRS=vendor INSTALLVENDORMAN3DIR=%{prefix}/share/man/man3
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL INSTALLDIRS=vendor INSTALLVENDORMAN3DIR=%{tde_prefix}/share/man/man3
 %__make OPTIMIZE="$RPM_OPT_FLAGS" ||:
 popd
 
@@ -1011,7 +1009,7 @@ popd
 
 
 %install
-export PATH="%{prefix}/bin:${PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
 
 %__make install DESTDIR=%{?buildroot} \
   PYTHON=%{__python}
@@ -1022,28 +1020,28 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 
 %if %{with java}
 # Installs juic
-%__install -D -m 755 qtjava/designer/juic/bin/juic	%{?buildroot}%{prefix}/bin/juic
-%__install -d -m 755 %{?buildroot}%{prefix}/share/juic/common
-%__install -m 644 qtjava/designer/juic/common/*.xml %{?buildroot}%{prefix}/share/juic/common
-%__install -m 644 qtjava/designer/juic/common/*.xsl %{?buildroot}%{prefix}/share/juic/common
-%__install -d -m 755 %{?buildroot}%{prefix}/share/juic/java
-%__install -m 644 qtjava/designer/juic/java/*.xml %{?buildroot}%{prefix}/share/juic/java
-%__install -m 644 qtjava/designer/juic/java/*.xsl %{?buildroot}%{prefix}/share/juic/java
-%__install -m 644 qtjava/designer/juic/juic.xsl  %{?buildroot}%{prefix}/share/juic
+%__install -D -m 755 qtjava/designer/juic/bin/juic	%{?buildroot}%{tde_prefix}/bin/juic
+%__install -d -m 755 %{?buildroot}%{tde_prefix}/share/juic/common
+%__install -m 644 qtjava/designer/juic/common/*.xml %{?buildroot}%{tde_prefix}/share/juic/common
+%__install -m 644 qtjava/designer/juic/common/*.xsl %{?buildroot}%{tde_prefix}/share/juic/common
+%__install -d -m 755 %{?buildroot}%{tde_prefix}/share/juic/java
+%__install -m 644 qtjava/designer/juic/java/*.xml %{?buildroot}%{tde_prefix}/share/juic/java
+%__install -m 644 qtjava/designer/juic/java/*.xsl %{?buildroot}%{tde_prefix}/share/juic/java
+%__install -m 644 qtjava/designer/juic/juic.xsl  %{?buildroot}%{tde_prefix}/share/juic
 %endif
 
 # kjsembed sample files
-%__install -d -m 755 %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customobject_plugin.cpp %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customobject_plugin.h %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customobject_plugin.desktop %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customqobject_plugin.cpp %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customqobject_plugin.h %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install -m 644 kjsembed/plugins/customqobject_plugin.desktop %{?buildroot}%{prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -d -m 755 %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customobject_plugin.cpp %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customobject_plugin.h %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customobject_plugin.desktop %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.cpp %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.h %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.desktop %{?buildroot}%{tde_prefix}/share/doc/trinity-libkjsembed-devel/plugin-examples/customobject/
 
 # Move 'embedjs.desktop' to correct location
-%__mv -f "%{?buildroot}%{prefix}/share/applnk/Utilities/embedjs.desktop" "%{?buildroot}%{prefix}/share/applications/tde/embedjs.desktop"
-%__rm -rf "%{?buildroot}%{prefix}/share/applnk"
+%__mv -f "%{?buildroot}%{tde_prefix}/share/applnk/Utilities/embedjs.desktop" "%{?buildroot}%{tde_prefix}/share/applications/tde/embedjs.desktop"
+%__rm -rf "%{?buildroot}%{tde_prefix}/share/applnk"
 
 # Move dcoppython to %python_sitearch
 if [ ! -d "%{?buildroot}%{python_sitearch}" ] && [ -d "%{?buildroot}%{python_sitelib}" ]; then
