@@ -8,12 +8,6 @@
 #  Having KDE libraries may cause FTBFS here !
 
 # TDE variables
-%define tde_epoch 2
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-%define pkg_rel 5
-
 %define tde_pkg tdebindings
 
 %define tde_prefix /opt/trinity
@@ -27,21 +21,21 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:		TDE bindings to non-C++ languages
-Version:		%{tde_version}
-Release:		%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
+Version:		14.1.5
+Release:    6
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/core/%{tarball_name}-%{version}%{?preversion:~%{preversion}}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/core/%{tarball_name}-%{version}.tar.xz
 Source1:		%{name}-rpmlintrc
 
 BuildRequires:  autoconf automake libtool m4
 
-BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-arts-devel >= 1.5.10
+BuildRequires:	trinity-tdelibs-devel >= %{version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -122,26 +116,26 @@ BuildRequires:	perl-devel
 %define perl_vendorarch %{expand:%%(eval `perl -V:installvendorarch`; echo $installvendorarch)}
 
 ## QScintilla
-%{?with_tqscintilla:BuildRequires:	libtqscintilla-devel >= %{?tde_epoch:%{tde_epoch}:}1.7.1}
+%{?with_tqscintilla:BuildRequires:	%{_lib}tqscintilla-devel >= 1.7.1}
 
-Obsoletes:	trinity-kdebindings < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-kdebindings = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-kdebindings < %{EVRD}
+Provides:	trinity-kdebindings = %{EVRD}
 
 # Metapackage requires
 %if %{with java}
-Requires: trinity-tdebindings-java = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-juic = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: trinity-tdebindings-java = %{EVRD}
+Requires: trinity-juic = %{EVRD}
 %endif
-Requires: trinity-libsmoketqt = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-libsmoketde = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: perl-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: trinity-libsmoketqt = %{EVRD}
+Requires: trinity-libsmoketde = %{EVRD}
+Requires: perl-dcop = %{EVRD}
 %if %{with python}
-Requires: python-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: python-dcop = %{EVRD}
 %endif
-Requires: trinity-libkjsembed1 = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-kjscmd = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-libkorundum0-ruby = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: trinity-libqt0-ruby = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: trinity-libkjsembed1 = %{EVRD}
+Requires: trinity-kjscmd = %{EVRD}
+Requires: trinity-libkorundum0-ruby = %{EVRD}
+Requires: trinity-libqt0-ruby = %{EVRD}
 
 
 %description
@@ -155,12 +149,12 @@ TDE/DCOP bindings to non-C++ languages
 %package java
 Summary:	TDE Java bindings metapackage [Trinity]
 Group:		System/Libraries
-Requires:	trinity-libdcop3-java = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libdcop3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libqt3-java = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libtqt3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libtrinity-java = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libtrinity-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop3-java = %{EVRD}
+Requires:	trinity-libdcop3-jni = %{EVRD}
+Requires:	trinity-libqt3-java = %{EVRD}
+Requires:	trinity-libtqt3-jni = %{EVRD}
+Requires:	trinity-libtrinity-java = %{EVRD}
+Requires:	trinity-libtrinity-jni = %{EVRD}
 
 %description java
 A metapackage depending on all TDE, Qt and DCOP bindings libraries
@@ -179,7 +173,7 @@ This package is part of the official TDE bindings module.
 Summary:	DCOP bindings for Java [Trinity]
 Group:		System/Libraries
 
-Requires:	trinity-libdcop3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop3-jni = %{EVRD}
 
 %description -n trinity-libdcop3-java
 This package contains the Java classes necessary to run Java programs
@@ -201,7 +195,7 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libdcop3-java-devel
 Summary:	DCOP bindings for Java (dcopidl2java program) [Trinity]
 Group:		Development/Languages/Java
-Requires:	trinity-libdcop3-java = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop3-java = %{EVRD}
 
 %description -n trinity-libdcop3-java-devel
 This package contains the dcopidl2java program which generates Java 
@@ -248,9 +242,9 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libqt3-java
 Summary:	Java bindings for Qt [Trinity]
 Group:		System/Libraries
-Requires:	trinity-libdcop3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libtqt3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-juic = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop3-jni = %{EVRD}
+Requires:	trinity-libtqt3-jni = %{EVRD}
+Requires:	trinity-juic = %{EVRD}
 
 %description -n trinity-libqt3-java
 This package contains the Java classes necessary to run Java programs
@@ -277,8 +271,8 @@ This package is part of the official TDE bindings module.
 Summary:	Java bindings for TQt ( Native libraries ) [Trinity]
 Group:		System/Libraries
 
-Obsoletes:	trinity-libqt3-jni < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libqt3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libqt3-jni < %{EVRD}
+Provides:	trinity-libqt3-jni = %{EVRD}
 
 %description -n trinity-libtqt3-jni
 This package contains the shared libraries necessary to run Java
@@ -304,10 +298,10 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libtqt3-jni-devel
 Summary:	Development files fo Java bindings for TQt ( Native libraries ) [Trinity]
 Group:		Development/Languages/Java
-Requires:	trinity-libtqt3-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtqt3-jni = %{EVRD}
 
-Obsoletes:	trinity-libqt3-jni-devel < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libqt3-jni-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libqt3-jni-devel < %{EVRD}
+Provides:	trinity-libqt3-jni-devel = %{EVRD}
 
 %description -n trinity-libtqt3-jni-devel
 This package contains the development files for trinity-libtqt3-jni.
@@ -329,7 +323,7 @@ This package is part of the official TDE bindings module.
 Summary:	Tdelibs bindings for Java [Trinity]
 Group:		System/Libraries
 
-Requires:	trinity-libtrinity-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtrinity-jni = %{EVRD}
 
 %description -n trinity-libtrinity-java
 This package contains the Java classes necessary to run Java programs
@@ -377,7 +371,7 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libtrinity-jni-devel
 Summary:	Development files for tdelibs bindings for java ( Native libraries ) [Trinity]
 Group:		Development/Languages/Java
-Requires:	trinity-libtrinity-jni = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtrinity-jni = %{EVRD}
 
 %description -n trinity-libtrinity-jni-devel
 This package contains the development files for trinity-libtrinity-jni.
@@ -396,8 +390,8 @@ This package is part of the official TDE bindings module.
 Summary:	SMOKE Binding Library to Qt
 Group:		System/Libraries
 
-Obsoletes:	trinity-libsmokeqt1 < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libsmokeqt1 = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libsmokeqt1 < %{EVRD}
+Provides:	trinity-libsmokeqt1 = %{EVRD}
 
 %description -n trinity-libsmoketqt
 The "Scripting Meta Object Kompiler Engine" library is used by
@@ -415,10 +409,10 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libsmoketqt-devel
 Summary:	SMOKE Binding Library to TQt - Development Files
 Group:		Development/Languages/Other
-Requires:	trinity-libsmoketqt = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libsmoketqt = %{EVRD}
 
-Obsoletes:	trinity-libsmokeqt-devel < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libsmokeqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libsmokeqt-devel < %{EVRD}
+Provides:	trinity-libsmokeqt-devel = %{EVRD}
 
 %description -n trinity-libsmoketqt-devel
 The "Scripting Meta Object Kompiler Engine" library is used by
@@ -443,8 +437,8 @@ This package is part of the official TDE bindings module.
 Summary:	SMOKE Binding Library to TDE
 Group:		System/Libraries
 
-Obsoletes:	trinity-libsmokekde1 < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libsmokekde1 = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libsmokekde1 < %{EVRD}
+Provides:	trinity-libsmokekde1 = %{EVRD}
 
 %description -n trinity-libsmoketde
 The "Scripting Meta Object Kompiler Engine" library is used by
@@ -462,10 +456,10 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libsmoketde-devel
 Summary:	SMOKE Binding Library to TDE - Development Files
 Group:		Development/Languages/Other
-Requires:	trinity-libsmoketde = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libsmoketde = %{EVRD}
 
-Obsoletes:	trinity-libsmokekde-devel < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libsmokekde-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libsmokekde-devel < %{EVRD}
+Provides:	trinity-libsmokekde-devel = %{EVRD}
 
 %description -n trinity-libsmoketde-devel
 The "Scripting Meta Object Kompiler Engine" library is used by
@@ -490,11 +484,11 @@ Summary:	DCOP Bindings for Perl
 Group:		System/Libraries
 Requires:	perl
 
-Obsoletes:	trinity-kdebindings-dcopperl < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-kdebindings-dcopperl = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-kdebindings-dcopperl < %{EVRD}
+Provides:	trinity-kdebindings-dcopperl = %{EVRD}
 
-Obsoletes:	trinity-perl-dcop < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-perl-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-perl-dcop < %{EVRD}
+Provides:	trinity-perl-dcop = %{EVRD}
 
 %description -n perl-dcop
 Perl bindings to the DCOP interprocess communication protocol used by TDE
@@ -516,8 +510,8 @@ Summary:	DCOP bindings for Python
 Group:		System/Libraries
 Requires:	pkgconfig(python)
 
-Obsoletes:	trinity-python-dcop < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-python-dcop = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-python-dcop < %{EVRD}
+Provides:	trinity-python-dcop = %{EVRD}
 
 %description -n python-dcop
 This package contains the shared libraries necessary to run and
@@ -589,7 +583,7 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libkjsembed-devel
 Summary:	Embedded JavaScript library (Development files)
 Group:		Development/Libraries/Other
-Requires:	trinity-libkjsembed1 = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libkjsembed1 = %{EVRD}
 
 %description -n trinity-libkjsembed-devel
 This package contains the header files and symbolic links necessary
@@ -636,7 +630,7 @@ This package is part of the official TDE bindings module.
 %package -n trinity-juic
 Summary:	The Qt Java UI Compiler
 Group:		Development/Languages/Java
-Requires:	trinity-libqt3-java = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libqt3-java = %{EVRD}
 
 %description -n trinity-juic
 This package contains the juic program, which is used to convert
@@ -659,7 +653,7 @@ This package is part of the official TDE bindings module.
 %package -n trinity-libkorundum0-ruby
 Summary:	TDE bindings for Ruby [Trinity]
 Group:		System/Libraries
-Requires:	trinity-libqt0-ruby = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libqt0-ruby = %{EVRD}
 
 %description -n trinity-libkorundum0-ruby
 This package contains the files necessary for running and developing
@@ -784,8 +778,8 @@ xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
 Summary:	Xparts library for TDE
 Group:		Development/Languages/Other
 
-Obsoletes:	trinity-libkdexparts1 < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-libkdexparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-libkdexparts1 < %{EVRD}
+Provides:	trinity-libkdexparts1 = %{EVRD}
 
 %description -n trinity-libtdexparts
 This package contains the xparts library for TDE.
@@ -803,10 +797,10 @@ Group:		Development/Languages/Other
 
 # still no...
 # %if 0%{?with_gtk1}
-# Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
+# Requires:	trinity-libgtkxparts1 = %{EVRD}
 # %endif
 
-Requires:	trinity-libtdexparts = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtdexparts = %{EVRD}
 
 %description -n trinity-libxparts-devel
 This package contains the development files for Xparts library.
@@ -826,15 +820,15 @@ Summary:	Extra xparts for TDE [Trinity]
 Group:		Development/Languages/Other
 
 # Metapckage requires
-Requires:	trinity-xpart-notepad = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-xpart-notepad = %{EVRD}
 
 # ... and no...
 # %if 0%{?with_gtk1}
-# Requires:	trinity-libgtkxparts1 = %{?epoch:%{epoch}:}%{version}-%{release}
+# Requires:	trinity-libgtkxparts1 = %{EVRD}
 # %endif
 
-Requires:	trinity-libtdexparts = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libdcop-c = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtdexparts = %{EVRD}
+Requires:	trinity-libdcop-c = %{EVRD}
 
 %description xparts-extras
 This package contains extra xparts-based modules for Trinity
@@ -863,7 +857,7 @@ This package contains the DCOP bindings for C.
 %package -n trinity-libdcop-c-devel
 Summary:	DCOP bindings for C, development files [Trinity]
 Group:		Development/Languages/C and C++
-Requires:	trinity-libdcop-c = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop-c = %{EVRD}
 
 %description -n trinity-libdcop-c-devel
 This package contains the development files for DCOP bindings for C.
@@ -881,23 +875,23 @@ Summary:	Development files for %{name}
 Group:		Development/Languages/Other
 
 Requires:	trinity-tdelibs-devel >= %{tde_version}
-Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	%{name} = %{EVRD}
 
-Obsoletes:	trinity-kdebindings-devel < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:	trinity-kdebindings-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-kdebindings-devel < %{EVRD}
+Provides:	trinity-kdebindings-devel = %{EVRD}
 
 # Metapackage
-Requires:	trinity-libsmoketqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libsmoketqt-devel = %{EVRD}
 %if %{with java}
-Requires:	trinity-libdcop3-java-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libdcop3-java-devel = %{EVRD}
 %endif
-Requires:	trinity-libsmoketde-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libkjsembed-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libxparts-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libdcop-c-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libsmoketde-devel = %{EVRD}
+Requires:	trinity-libkjsembed-devel = %{EVRD}
+Requires:	trinity-libxparts-devel = %{EVRD}
+Requires:	trinity-libdcop-c-devel = %{EVRD}
 %if %{with java}
-Requires:	trinity-libtqt3-jni-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:	trinity-libtrinity-jni-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:	trinity-libtqt3-jni-devel = %{EVRD}
+Requires:	trinity-libtrinity-jni-devel = %{EVRD}
 %endif
 
 %description devel
